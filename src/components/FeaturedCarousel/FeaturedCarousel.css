@@ -1,0 +1,38 @@
+/* FeaturedCarousel.css */
+
+.carousel {
+  margin-bottom: 32px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 16px;
+  padding-bottom: 8px;
+}
+
+.carousel-item {
+  min-width: 160px;
+  cursor: pointer;
+  outline: none;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  background-color: #222;
+}
+
+.carousel-item:hover img {
+  filter: brightness(1.05);
+}
+
+.carousel-title {
+  margin-top: 6px;
+  font-size: 13px;
+  text-align: center;
+  color: #ddd;
+}
