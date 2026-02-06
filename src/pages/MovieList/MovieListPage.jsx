@@ -35,7 +35,6 @@ const MovieListPage = () => {
   const requestTimestamps = useRef([]);
   const filterFocusTimer = useRef(null);
 
-  /* ---------- FAVORITES ---------- */
   const favoriteMovies = useMemo(() => {
     return JSON.parse(localStorage.getItem('favorites')) || [];
   }, []);
@@ -43,7 +42,6 @@ const MovieListPage = () => {
   const navigableMovies =
     filter === 'favorites' ? favoriteMovies : movies;
 
-  /* ---------- GRID COLUMNS ---------- */
   const getColumnsCount = () => {
     if (window.innerWidth < 480) return 1;
     if (window.innerWidth < 768) return 2;
@@ -51,7 +49,6 @@ const MovieListPage = () => {
     return 4;
   };
 
-  /* ---------- SEARCH DEBOUNCE ---------- */
   useEffect(() => {
     const timer = setTimeout(() => {
       if (search.length >= 2) {
@@ -65,7 +62,6 @@ const MovieListPage = () => {
     return () => clearTimeout(timer);
   }, [search]);
 
-  /* ---------- RATE LIMIT ---------- */
   const canSendRequest = () => {
     const now = Date.now();
     requestTimestamps.current = requestTimestamps.current.filter(
@@ -78,7 +74,6 @@ const MovieListPage = () => {
     return true;
   };
 
-  /* ---------- FETCH MOVIES ---------- */
   useEffect(() => {
     if (filter === 'favorites') return;
     if (!canSendRequest()) return;
@@ -92,7 +87,6 @@ const MovieListPage = () => {
     );
   }, [dispatch, filter, page, debouncedSearch]);
 
-  /* ---------- KEYBOARD NAVIGATION ---------- */
   useEffect(() => {
     if (!navigableMovies.length) return;
 
@@ -137,7 +131,6 @@ const MovieListPage = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [focusedIndex, navigableMovies, navigate]);
 
-  /* ---------- FILTERS ---------- */
   const applyFilter = (value) => {
     setFilter(value);
     setPage(1);
