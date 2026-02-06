@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# 🎬 Movie Website — React Technical Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a **production-ready React application** built as part of a **technical assessment**.  
+It demonstrates clean architecture, advanced state management, and real-world frontend constraints handling using **React + Redux + Redux-Saga**.
 
-## Available Scripts
+The objective of this project is not only to display movies, but to showcase:
+- Code quality & readability
+- Thoughtful UX decisions
+- Efficient API usage
+- Keyboard-only navigation
+- Performance and scalability awareness
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🔍 What This Project Demonstrates
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### ✅ Frontend Engineering Skills
+- Component-based architecture
+- Clear separation of concerns (UI / state / side effects)
+- Predictable global state management with Redux
+- Side-effect orchestration with Redux-Saga
+- Controlled rendering & optimized API calls
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### ✅ Real-World UX Constraints
+- Keyboard-only navigation (no mouse scrolling)
+- Debounced and rate-limited search
+- Pagination handling
+- Graceful loading & error states
+- Local persistence with `localStorage`
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🚀 Application Features
 
-### `npm run build`
+### 🏠 Movie Listing Page
+- Displays **popular movies** by default
+- Responsive layout (4 cards per row on desktop)
+- Keyboard navigation using arrow keys
+- Pagination for Popular & Airing Today categories
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🔎 Search
+- Search input with:
+  - Minimum **2 characters**
+  - **500ms debounce**
+  - **Rate-limited to 5 requests per 10 seconds**
+- Prevents unnecessary API calls and API abuse
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🎛 Filters
+- Popular
+- Airing Today
+- My Favorites (stored locally)
+- Filter requests are triggered:
+  - Immediately on click
+  - Or after **2 seconds on focus**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### ⭐ Favorites
+- Add / remove movies from favorites
+- Persisted using `localStorage`
+- No backend required
 
-### `npm run eject`
+### 📄 Movie Details Page
+- Opens in the same tab
+- Displays poster, rating, release date, overview
+- Keyboard shortcuts:
+  - `Enter` → add/remove favorite
+  - `Escape` → go back
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## ⌨️ Accessibility & Navigation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Arrow keys for navigation
+- Enter to select
+- Escape to return
+- Tab key disabled
+- Mouse scrolling disabled (`overflow: hidden`)
+- Fully usable **without a mouse**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 🧠 Tech Stack
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **React**
+- **Redux**
+- **Redux-Saga**
+- **React Router**
+- **TMDB API**
+- **Netlify (deployment)**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 🔑 TMDB API Key (Required)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This project uses **The Movie Database (TMDB) API** to fetch movie data.
 
-### Analyzing the Bundle Size
+Without a valid API key, the application **will not display any movies**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+### 📍 How to Configure the API Key (Local Development)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. Create a `.env` file at the **root of the project**
+2. Add the following line:
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```env
+REACT_APP_TMDB_API_KEY=your_tmdb_api_key_here
