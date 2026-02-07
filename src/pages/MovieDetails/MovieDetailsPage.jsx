@@ -1,10 +1,15 @@
 import './MovieDetailsPage.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchMovieDetailsApi } from '../../services/tmdbApi';
 
 const POSTER = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP = 'https://image.tmdb.org/t/p/w1280';
+
+const ACTIONS = {
+  BACK: 0,
+  FAVORITE: 1,
+};
 
 const MovieDetailsPage = () => {
   const { id } = useParams();
@@ -12,6 +17,7 @@ const MovieDetailsPage = () => {
 
   const [movie, setMovie] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [focusedAction, setFocusedAction] = useState(ACTIONS.FAVORITE);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -24,11 +30,63 @@ const MovieDetailsPage = () => {
     });
   }, [id]);
 
+  const toggleFavorite = useCallback(() => {
+    if (!movie) return;
+
+    const stored = JSON.parse(localStorage.getItem('favorites')) || [];
+    const updated = isFavorite
+      ? stored.filter((m) => m.id !== movie.id)
+      : [...stored, movie];
+
+    localStorage.setItem('favorites', JSON.stringify(updated));
+    setIsFavorite(!isFavorite);
+  }, [movie, isFavorite]);
+
+  const goBack = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        goBack();
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (focusedAction === ACTIONS.FAVORITE) {
+          toggleFavorite();
+        } else if (focusedAction === ACTIONS.BACK) {
+          goBack();
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        setFocusedAction((current) =>
+          current === ACTIONS.BACK ? ACTIONS.FAVORITE : ACTIONS.BACK
+        );
+      }
+
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setFocusedAction((current) =>
+          current === ACTIONS.FAVORITE ? ACTIONS.BACK : ACTIONS.FAVORITE
+        );
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [focusedAction, isFavorite, movie, toggleFavorite, goBack]);
+
   if (!movie) return <div className="details-page" />;
 
   return (
     <div className="details-page">
-      {/* BACKDROP */}
       <div
         className="details-backdrop"
         style={{
@@ -38,12 +96,13 @@ const MovieDetailsPage = () => {
         }}
       />
 
-      {/* BACK BUTTON */}
-      <button className="back-button" onClick={() => navigate(-1)}>
+      <button
+        className={`back-button ${focusedAction === ACTIONS.BACK ? 'focused' : ''}`}
+        onClick={goBack}
+      >
         ← Back
       </button>
 
-      {/* CONTENT */}
       <div className="details-container">
         <div className="details-poster">
           <img
@@ -63,20 +122,19 @@ const MovieDetailsPage = () => {
           <p className="overview">{movie.overview}</p>
 
           <button
-            className={`favorite-button ${isFavorite ? 'active' : ''}`}
-            onClick={() => {
-              const stored = JSON.parse(localStorage.getItem('favorites')) || [];
-              const updated = isFavorite
-                ? stored.filter((m) => m.id !== movie.id)
-                : [...stored, movie];
-
-              localStorage.setItem('favorites', JSON.stringify(updated));
-              setIsFavorite(!isFavorite);
-            }}
+            className={`favorite-button ${isFavorite ? 'active' : ''} ${focusedAction === ACTIONS.FAVORITE ? 'focused' : ''
+              }`}
+            onClick={toggleFavorite}
           >
             {isFavorite ? '★ Remove from favorites' : '☆ Add to favorites'}
           </button>
         </div>
+      </div>
+
+      <div className="keyboard-hints">
+        <span>ESC: Retour</span>
+        <span>ENTER: {isFavorite ? 'Retirer' : 'Ajouter'} aux favoris</span>
+        <span>↑/↓: Naviguer</span>
       </div>
     </div>
   );

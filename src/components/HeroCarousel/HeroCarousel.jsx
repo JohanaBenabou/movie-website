@@ -1,82 +1,128 @@
-import '../HeroCarousel/HeroCarousel.css';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { TMDB_IMAGE_1280 } from '../../services/tmdbConfig';
+import './HeroCarousel.css';
+import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 
-const IMAGE_BASE = 'https://image.tmdb.org/t/p/w1280';
-const MAX_ITEMS = 8;
-const AUTO_DELAY = 5000;
+const HeroCarousel = forwardRef(({ movies, filter }, ref) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-const HeroCarousel = ({ movies = [] }) => {
-  const navigate = useNavigate();
-  const [index, setIndex] = useState(0);
-
-  const safeMovies = movies.slice(0, MAX_ITEMS);
-  const current = safeMovies[index];
-
+  useImperativeHandle(ref, () => ({
+    goToNext: () => {
+      setCurrentIndex((prev) => (prev + 1) % Math.min(movies.length, 5));
+    },
+    goToPrevious: () => {
+      setCurrentIndex((prev) =>
+        prev === 0 ? Math.min(movies.length, 5) - 1 : prev - 1
+      );
+    },
+    goToSlide: (index) => {
+      setCurrentIndex(index);
+    },
+    getCurrentMovie: () => {
+      const carouselMovies = movies.slice(0, 5);
+      return carouselMovies[currentIndex];
+    }
+  }), [currentIndex, movies]);
 
   useEffect(() => {
-    if (!safeMovies.length) return;
-    const timer = setInterval(
-      () => setIndex((i) => (i + 1) % safeMovies.length),
-      AUTO_DELAY
+    setCurrentIndex(0);
+  }, [filter]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % Math.min(movies.length, 5));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [movies.length]);
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) =>
+      prev === 0 ? Math.min(movies.length, 5) - 1 : prev - 1
     );
-    return () => clearInterval(timer);
-  }, [safeMovies.length]);
+  };
 
-  useEffect(() => {
-    if (!current) return;
-    const onKey = (e) => {
-      if (e.key === 'ArrowRight') setIndex(i => Math.min(i + 1, safeMovies.length - 1));
-      if (e.key === 'ArrowLeft') setIndex(i => Math.max(i - 1, 0));
-      if (e.key === 'Enter') navigate(`/movie/${current.id}`);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [current, navigate, safeMovies.length]);
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % Math.min(movies.length, 5));
+  };
 
-  if (!current) return null;
+  const goToSlide = (index) => {
+    setCurrentIndex(index);
+  };
 
-  const image = current.backdrop_path || current.poster_path;
-  if (!image) return null;
+  const carouselMovies = movies.slice(0, 5);
+  const currentMovie = carouselMovies[currentIndex];
 
-  const imagePath = current.backdrop_path || current.poster_path;
-  if (!imagePath) return null;
+  if (!currentMovie) return null;
+
+  const getFilterTitle = () => {
+    switch (filter) {
+      case 'popular':
+        return 'Popular Now';
+      case 'airing':
+        return 'Airing Today';
+      default:
+        return 'Featured';
+    }
+  };
 
   return (
-    <section className="hero">
-      <div
-        className="hero-main"
-        onClick={() => navigate(`/movie/${current.id}`)}
-      >
-        <img src={`${TMDB_IMAGE_1280}${imagePath}`}
-          alt={current.title} />
+    <div className="hero-carousel">
+      <div className="carousel-header">
+        <h2 className="carousel-category">{getFilterTitle()}</h2>
+      </div>
 
-        <div className="hero-overlay">
-          <h2>{current.title}</h2>
-          <p className="rating">⭐ {current.vote_average}</p>
-          <p className="hint">← → Navigate · Enter open</p>
+      <div className="carousel-container">
+        {carouselMovies.map((movie, index) => (
+          <div
+            key={movie.id}
+            className={`carousel-slide ${index === currentIndex ? 'active' : ''}`}
+            style={{
+              backgroundImage: movie.backdrop_path
+                ? `url(https://image.tmdb.org/t/p/w1280${movie.backdrop_path})`
+                : 'none',
+            }}
+          >
+            <div className="carousel-overlay">
+              <h3 className="carousel-title">{movie.title || movie.name}</h3>
+              <div className="carousel-rating">
+                <span>⭐ {movie.vote_average?.toFixed(1)}</span>
+                {movie.release_date && (
+                  <span className="carousel-date">
+                    📅 {movie.release_date.split('-')[0]}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          className="carousel-nav prev"
+          onClick={goToPrevious}
+          aria-label="Previous slide"
+        >
+          ‹
+        </button>
+        <button
+          className="carousel-nav next"
+          onClick={goToNext}
+          aria-label="Next slide"
+        >
+          ›
+        </button>
+        <div className="carousel-dots">
+          {carouselMovies.map((_, index) => (
+            <button
+              key={index}
+              className={`carousel-dot ${index === currentIndex ? 'active' : ''}`}
+              onClick={() => goToSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
       </div>
-
-      <div className="hero-thumbnails">
-        {safeMovies.map((m, i) => {
-          const thumb = m.backdrop_path || m.poster_path;
-          if (!thumb) return null;
-
-          return (
-            <img
-              key={m.id}
-              src={`${IMAGE_BASE}${thumb}`}
-              alt={m.title}
-              className={i === index ? 'active' : ''}
-              onClick={() => setIndex(i)}
-            />
-          );
-        })}
-      </div>
-    </section>
+    </div>
   );
-};
+});
+
+HeroCarousel.displayName = 'HeroCarousel';
 
 export default HeroCarousel;

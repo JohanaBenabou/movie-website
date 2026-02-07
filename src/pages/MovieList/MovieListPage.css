@@ -4,13 +4,24 @@
   color: white;
   padding: 16px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.page-header {
+  position: relative;
+  z-index: 10;
+  background: #0f1115;
+  padding: 24px 32px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .site-header {
-  background: radial-gradient(circle at top,
-      #1a1a1a,
-      #0b0b0b 70%);
+  background: radial-gradient(circle at top, #1a1a1a, #0b0b0b 70%);
   padding: 56px 16px 48px;
   margin-bottom: 40px;
 }
@@ -41,10 +52,19 @@
   width: 100%;
   padding: 14px 16px;
   border-radius: 10px;
-  border: none;
+  border: 2px solid transparent;
   font-size: 15px;
   outline: none;
   box-sizing: border-box;
+  background-color: #1a1a1a;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus,
+.search-input.keyboard-focused {
+  border-color: #facc15;
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
 }
 
 .filters {
@@ -59,7 +79,7 @@
   background-color: #222;
   color: white;
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 2px solid #333;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -70,13 +90,26 @@
   border-color: #7c3aed;
 }
 
+.filter-btn.focused {
+  border-color: #facc15;
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+  transform: scale(1.05);
+}
+
 .filter-btn:hover {
   background-color: #333;
 }
 
 .filter-btn:focus {
-  outline: 2px solid #facc15;
-  outline-offset: 2px;
+  outline: none;
+}
+
+.carousel-focused {
+  outline: 3px solid #facc15;
+  outline-offset: 4px;
+  border-radius: 12px;
+  margin: 20px 20px 20px 20px;
+
 }
 
 .movies-grid {
@@ -84,6 +117,24 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   margin-bottom: 32px;
+}
+
+.pagination.focused {
+  outline: 3px solid #facc15;
+  outline-offset: 4px;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.state-text {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #888;
+}
+
+.state-text.error {
+  color: #ff6b6b;
 }
 
 @media (max-width: 1024px) {

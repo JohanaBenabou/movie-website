@@ -1,10 +1,8 @@
-const FilterButton = ({ label, active, onClick, onFocus, onBlur }) => {
+const FilterButton = ({ label, active, focused, onClick }) => {
   return (
     <button
-      className={`filter-btn ${active ? 'active' : ''}`}
+      className={`filter-btn ${active ? 'active' : ''} ${focused ? 'focused' : ''}`}
       onClick={onClick}
-      onFocus={onFocus}
-      onBlur={onBlur}
     >
       {label}
     </button>
@@ -12,4 +10,3 @@ const FilterButton = ({ label, active, onClick, onFocus, onBlur }) => {
 };
 
 export default FilterButton;
-

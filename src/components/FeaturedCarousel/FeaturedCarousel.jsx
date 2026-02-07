@@ -1,4 +1,3 @@
-// src/components/FeaturedCarousel.jsx
 import '../FeaturedCarousel/FeaturedCarousel.css';
 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';

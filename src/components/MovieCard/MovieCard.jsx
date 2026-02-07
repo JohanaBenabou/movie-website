@@ -1,4 +1,3 @@
-// src/components/MovieCard.jsx
 import '../MovieCard/MovieCard.css';
 
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
