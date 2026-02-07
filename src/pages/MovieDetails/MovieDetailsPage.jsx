@@ -130,12 +130,6 @@ const MovieDetailsPage = () => {
           </button>
         </div>
       </div>
-
-      <div className="keyboard-hints">
-        <span>ESC: Retour</span>
-        <span>ENTER: {isFavorite ? 'Retirer' : 'Ajouter'} aux favoris</span>
-        <span>↑/↓: Naviguer</span>
-      </div>
     </div>
   );
 };

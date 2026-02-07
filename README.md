@@ -36,7 +36,7 @@ The objective of this project is not only to display movies, but to showcase:
 - Displays **popular movies** by default
 - Responsive layout (4 cards per row on desktop)
 - Keyboard navigation using arrow keys
-- Pagination for Popular & Airing Today categories
+- Pagination for Popular & Airing Now categories
 
 ### 🔎 Search
 - Search input with:
@@ -47,7 +47,7 @@ The objective of this project is not only to display movies, but to showcase:
 
 ### 🎛 Filters
 - Popular
-- Airing Today
+- Airing Now
 - My Favorites (stored locally)
 - Filter requests are triggered:
   - Immediately on click

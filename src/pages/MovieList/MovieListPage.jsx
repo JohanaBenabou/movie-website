@@ -42,11 +42,11 @@ const MovieListPage = () => {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [focusedIndex, setFocusedIndex] = useState(0);
-  const [zone, setZone] = useState(ZONES.GRID);
+  const [zone, setZone] = useState(ZONES.SEARCH); 
   const [filterIndex, setFilterIndex] = useState(0);
   const selectedPageRef = useRef(1);
-  const paginationPositionRef = useRef('page');
-  const [, forceUpdate] = useState(0);
+  const paginationPositionRef = useRef('page'); 
+  const [, forceUpdate] = useState(0); 
 
   const searchRef = useRef(null);
   const filtersRef = useRef(null);
@@ -98,6 +98,10 @@ const MovieListPage = () => {
       }
     }
   }, [focusedIndex, zone]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -197,7 +201,7 @@ const MovieListPage = () => {
           } else if (!loading && !debouncedSearch && filter !== 'favorites' && totalPages > 1) {
             setZone(ZONES.PAGINATION);
             selectedPageRef.current = page;
-            paginationPositionRef.current = 'page';
+            paginationPositionRef.current = 'page'; 
             forceUpdate(n => n + 1);
             paginationRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
@@ -235,7 +239,7 @@ const MovieListPage = () => {
           } else if (paginationPositionRef.current === 'page') {
             const maxVisible = 5;
             let startPage = Math.max(1, page - Math.floor(maxVisible / 2));
-
+            
             if (selectedPageRef.current > startPage) {
               selectedPageRef.current = selectedPageRef.current - 1;
             } else if (startPage > 1 && selectedPageRef.current > 1) {
@@ -256,7 +260,7 @@ const MovieListPage = () => {
             const maxVisible = 5;
             let startPage = Math.max(1, page - Math.floor(maxVisible / 2));
             let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-
+            
             if (selectedPageRef.current < endPage) {
               selectedPageRef.current = selectedPageRef.current + 1;
             } else if (endPage < totalPages && selectedPageRef.current < totalPages) {
@@ -274,7 +278,7 @@ const MovieListPage = () => {
         }
         if (e.key === 'Enter') {
           console.log('Enter pressed - Position:', paginationPositionRef.current, 'Selected page:', selectedPageRef.current);
-
+          
           if (paginationPositionRef.current === 'prev' && page > 1) {
             setPage(page - 1);
             selectedPageRef.current = page - 1;
@@ -284,7 +288,7 @@ const MovieListPage = () => {
           } else if (paginationPositionRef.current === 'page') {
             setPage(selectedPageRef.current);
           }
-
+          
           setFocusedIndex(0);
           setTimeout(() => {
             setZone(ZONES.GRID);
@@ -341,8 +345,8 @@ const MovieListPage = () => {
       {error && <p className="state-text error">{error}</p>}
 
       {filter !== 'favorites' && movies.length > 0 && !debouncedSearch && (
-        <div
-          ref={carouselRef}
+        <div 
+          ref={carouselRef} 
           className={`hero-carousel-wrapper ${zone === ZONES.CAROUSEL ? 'carousel-focused' : ''}`}
         >
           <HeroCarousel movies={movies} filter={filter} ref={carouselControlRef} />

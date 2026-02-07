@@ -56,9 +56,9 @@ const HeroCarousel = forwardRef(({ movies, filter }, ref) => {
   const getFilterTitle = () => {
     switch (filter) {
       case 'popular':
-        return 'Popular Now';
+        return 'Popular';
       case 'airing':
-        return 'Airing Today';
+        return 'Airing Now';
       default:
         return 'Featured';
     }
